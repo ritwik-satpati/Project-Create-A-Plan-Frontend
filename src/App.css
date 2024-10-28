@@ -1,0 +1,5 @@
+/* Hide the scrollbar for the whole page */
+body::-webkit-scrollbar {
+  display: none;
+  scroll-behavior: smooth;
+};
