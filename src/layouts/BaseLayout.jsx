@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   IoHomeOutline,
   IoHome,
@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 
 const BaseLayout = ({ children, menu }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { user } = useSelector((state) => state.auth);
 
@@ -34,7 +35,7 @@ const BaseLayout = ({ children, menu }) => {
 
   const handleAccount = () => {
     if (!user) {
-      navigate("/login");
+      navigate(`/login?ref=${encodeURIComponent(location.pathname)}`);
     } else {
       navigate("/account");
     }
@@ -51,40 +52,36 @@ const BaseLayout = ({ children, menu }) => {
         <div className="flex items-center justify-center w-full h-[70px] border-t-2 border-blue-100 bg-white">
           <div className="w-full h-full items-center flex justify-between space-x-2 px-2">
             <button
-              className={`${
-                menu === "plans"
-                  ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
-                  : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
-              } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
+              className={`${menu === "plans"
+                ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
+                : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
+                } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
               onClick={handlePlans}
             >
               <div className="text-xl mt-1">
                 {menu === "plans" ? <IoHome /> : <IoHomeOutline />}
               </div>
               <div
-                className={`${
-                  menu === "plans" ? `font-medium` : `font-normal`
-                } font-Poppins text-center text-sm lg:text-base`}
+                className={`${menu === "plans" ? `font-medium` : `font-normal`
+                  } font-Poppins text-center text-sm lg:text-base`}
               >
                 Plans
               </div>
             </button>
 
             <button
-              className={`${
-                menu === "shared"
-                  ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
-                  : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
-              } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
+              className={`${menu === "shared"
+                ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
+                : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
+                } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
               onClick={handleShared}
             >
               <div className="text-xl mt-1">
                 {menu === "shared" ? <IoPeople /> : <IoPeopleOutline />}
               </div>
               <div
-                className={`${
-                  menu === "shared" ? `font-medium` : `font-normal`
-                } font-Poppins text-center text-sm lg:text-base`}
+                className={`${menu === "shared" ? `font-medium` : `font-normal`
+                  } font-Poppins text-center text-sm lg:text-base`}
               >
                 Shared
               </div>
@@ -107,11 +104,10 @@ const BaseLayout = ({ children, menu }) => {
             </button>
 
             <button
-              className={`${
-                menu === "bookmarks"
-                  ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
-                  : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
-              } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
+              className={`${menu === "bookmarks"
+                ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
+                : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
+                } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
               onClick={handleBookmark}
             >
               <div className="text-xl mt-1">
@@ -122,29 +118,26 @@ const BaseLayout = ({ children, menu }) => {
                 )}
               </div>
               <div
-                className={`${
-                  menu === "bookmarks" ? `font-medium` : `font-normal`
-                } font-Poppins text-center text-sm lg:text-base`}
+                className={`${menu === "bookmarks" ? `font-medium` : `font-normal`
+                  } font-Poppins text-center text-sm lg:text-base`}
               >
                 Bookmarks
               </div>
             </button>
 
             <button
-              className={`${
-                menu === "account"
-                  ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
-                  : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
-              } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
+              className={`${menu === "account"
+                ? `bg-blue-200 border-t-4 border-blue-800 text-blue-900 pb-1`
+                : `hover:bg-blue-200 hover:text-blue-900 text-blue-800`
+                } w-full h-full flex flex-col items-center justify-center space-y-0.5 p-0.5`}
               onClick={handleAccount}
             >
               <div className="text-xl mt-1">
                 {menu === "account" ? <IoPerson /> : <IoPersonOutline />}
               </div>
               <div
-                className={`${
-                  menu === "account" ? `font-medium` : `font-normal`
-                } font-Poppins text-center text-sm lg:text-base`}
+                className={`${menu === "account" ? `font-medium` : `font-normal`
+                  } font-Poppins text-center text-sm lg:text-base`}
               >
                 Account
               </div>

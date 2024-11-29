@@ -36,6 +36,10 @@ import Dialog from "./Dialog";
 import Popup from "../utils/Popup";
 import { FaLockOpen, FaLock, FaUserLock } from "react-icons/fa";
 import NeedToLogin from "./NeedToLogin";
+import { MdFormatAlignLeft } from "react-icons/md";
+import { AiOutlineTable } from "react-icons/ai";
+import PlanDetailsViewTable from "./PlanDetailsViewTable";
+import PlanDetailsViewStepper from "./PlanDetailsViewStepper";
 
 const PlanDetails = () => {
   const { planId } = useParams();
@@ -67,18 +71,19 @@ const PlanDetails = () => {
       dispatch(getItineraryRequest());
       toast.success(data?.message);
       dispatch(getItinerarySuccess(data?.data));
-      if (dataBookmarked && dataBookmarked.data.bookmark) {
-        setIsBookmarked(true);
-      } else if (errorBookmarked) {
-        setIsBookmarked(false);
-      }
     } else if (error) {
       dispatch(getItineraryFail());
-      console.log(error);
       toast.error(error?.data?.message || "Failed to fetch plan");
     }
-  }, [data, error]);
+  }, [data, error, dispatch]);
 
+  useEffect(() => {
+    if (dataBookmarked?.data?.bookmark) {
+      setIsBookmarked(true);
+    } else if (errorBookmarked) {
+      setIsBookmarked(false);
+    }
+  }, [dataBookmarked, errorBookmarked]);
 
   const handleLoginRedirect = () => {
     navigate(`/login?ref=${encodeURIComponent(location.pathname)}`);
@@ -87,10 +92,11 @@ const PlanDetails = () => {
   const handleBookmark = async () => {
     if (user) {
       try {
+        setIsBookmarked(!isBookmarked);
         const res = await BookmarkPlanApiCall({ planId }).unwrap();
         toast.success(res?.message);
-        setIsBookmarked(!isBookmarked);
       } catch (err) {
+        setIsBookmarked(isBookmarked);
         toast.error(err?.data?.message || "Something went wrong");
       }
 
@@ -143,18 +149,17 @@ const PlanDetails = () => {
 
   const handleShare = async () => {
     if (planData.access === "Private") {
-      toast.error("Currently this Plan is Private. Edit Access to Share !");
-    } else {
-      try {
-        const fullUrl = window.location.origin + location.pathname;
-        // await window.navigator.clipboard.writeText(fullUrl);
-        const text = `${planData?.name} :: ${fullUrl}`;
-        await window.navigator.clipboard.writeText(text);
-        toast.success("Link copied to clipboard!");
-      } catch (err) {
-        console.error("Failed to copy: ", err);
-        toast.error("Failed to copy the link.");
-      }
+      toast.warning("This plan is private. Others cannot view it.");
+    }
+    try {
+      const fullUrl = window.location.origin + location.pathname;
+      // await window.navigator.clipboard.writeText(fullUrl);
+      const text = `${planData?.name} :: ${fullUrl}`;
+      await window.navigator.clipboard.writeText(text);
+      toast.success("Link copied to clipboard!");
+    } catch (err) {
+      // console.error("Failed to copy: ", err);
+      toast.error("Failed to copy the link.");
     }
   };
 
@@ -165,10 +170,16 @@ const PlanDetails = () => {
       toast.success(res?.message);
       dispatch(createItinerarySuccess(res?.data));
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       dispatch(createItineraryFail());
       toast.error(err?.data?.message || "Something went wrong");
     }
+  };
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
   };
 
   if (isLoading) {
@@ -215,14 +226,20 @@ const PlanDetails = () => {
                         <div className="">
                           <IoBookmark />
                         </div>
-                        <div className="">Bookmarked</div>
+                        <div className="">
+                          {isLoadingBookmarked ? (
+                            <p>Checking</p>
+                          ) : (
+                            <p>Bookmarked</p>
+                          )}
+                        </div>
                       </>
                     ) : (
                       <>
                         <div className="">
                           <IoBookmarkOutline />
                         </div>
-                        <div className="">Bookmark</div>
+                        {isLoadingBookmarked ? <p>Checking</p> : <p>Bookmark</p>}
                       </>
                     )}
                   </div>
@@ -231,7 +248,7 @@ const PlanDetails = () => {
                 <>
                   {/* Edit */}
                   <div
-                    className="flex items-center justify-start space-x-1 bg-yellow-400 hover:bg-yellow-500 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-yellow-900"
+                    className="h-7 flex items-center justify-start space-x-1 bg-yellow-400 hover:bg-yellow-500 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-yellow-900"
                     onClick={handleEdit}
                   >
                     <div className="">
@@ -241,7 +258,7 @@ const PlanDetails = () => {
                   </div>
                   {/* Delete */}
                   <div
-                    className="flex items-center justify-start space-x-1 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-red-900"
+                    className="h-7 flex items-center justify-start space-x-1 bg-red-500 hover:bg-red-600 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-red-900"
                     onClick={handleDelete}
                   >
                     <div className="">
@@ -253,7 +270,7 @@ const PlanDetails = () => {
               )}
               {/* Share */}
               <div
-                className="flex items-center justify-start space-x-1 bg-green-400 hover:bg-green-500 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-green-900"
+                className="h-7 flex items-center justify-start space-x-1 bg-green-400 hover:bg-green-500 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-green-900"
                 onClick={handleShare}
               >
                 <div className="">
@@ -261,71 +278,43 @@ const PlanDetails = () => {
                 </div>
                 <div className="">Share</div>
               </div>
+              {/* Switch View Button */}
+              <div>
+                <label className="flex cursor-pointer select-none items-center">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={handleCheckboxChange}
+                      className="sr-only"
+                    />
+                    <div className="block h-7 w-14 rounded-sm bg-gray-600"></div>
+                    <div
+                      className={`dot absolute left-1 top-1 h-5 w-5 rounded-sm bg-white transition ${isChecked ? "translate-x-7" : ""
+                        }`}
+                    >
+                      {isChecked ? (
+                        <AiOutlineTable className="rounded-full h-5 w-5 p-0.5 text-gray-900 text-xl" />
+                      ) : (
+                        <MdFormatAlignLeft className="rounded-full h-5 w-5 p-0.5 text-gray-900 text-xl" />
+                      )}
+                    </div>
+                  </div>
+                </label>
+              </div>
             </div>
 
             {/* Bookmark & Edit & Delete & Share ==> End */}
 
-            <div className="overflow-hidden">
+            <div className="overflow-hidden pt-3 space-y-3">
               {itineraryData ? (
-                itineraryData.itinerary &&
-                itineraryData.itinerary.map((item, index) => (
-                  <div
-                    key={index}
-                    className="relative pl-8 sm:pl-32 pt-6 group/item"
-                  >
-                    {/* <!-- Vertical line (::before) ~ Date ~ Title ~ Circle marker (::after) --> */}
-                    <div className="flex flex-col sm:flex-row items-start mb-1 group-last/item:before:h-[full] before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-indigo-600 after:border-4 after:box-content after:border-slate-50 after:rounded-sm sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
-                      <div className="pt-0.5 sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full font-Poppins">
-                        {item.date}
-                      </div>
-                      <div className="font-Poppins font-medium text-2xl text-indigo-500 mb-1 sm:mb-0">
-                        Day - {item.day}
-                      </div>
-                    </div>
-                    {/* <!-- Content --> */}
-                    <div className="text-slate-500 font-Poppins">
-                      {item.desc}
-                    </div>
-                    {/* <!-- Sub-Content --> */}
-                    <div>
-                      {item &&
-                        item.plans &&
-                        item.plans.map((subItem, subIndex) => (
-                          <div
-                            key={subIndex}
-                            className="relative pl-8 sm:pl-32 pt-6 group"
-                          >
-                            {/* <!-- Vertical line (::before) ~ Date ~ Title ~ Circle marker (::after) --> */}
-                            <div className="flex flex-col sm:flex-row items-start mb-1 group-last:before:hidden before:absolute before:left-2 sm:before:left-0 before:h-full before:px-px before:bg-slate-300 sm:before:ml-[6.5rem] before:self-start before:-translate-x-1/2 before:translate-y-3 after:absolute after:left-2 sm:after:left-0 after:w-2 after:h-2 after:bg-indigo-600 after:border-4 after:box-content after:border-slate-50 after:rounded-full sm:after:ml-[6.5rem] after:-translate-x-1/2 after:translate-y-1.5">
-                              <div className="pt-0.5 sm:absolute left-0 translate-y-0.5 inline-flex items-center justify-center text-xs font-semibold uppercase w-20 h-6 mb-3 sm:mb-0 text-emerald-600 bg-emerald-100 rounded-full font-Poppins">
-                                {subItem.time || "10:00 AM"}
-                              </div>
-                              <div className="flex flex-wrap gap-x-2">
-                                <div className="text-slate-500 font-Poppins">
-                                  {subItem.plan}
-                                </div>
-                                {/* <!-- Link --> */}
-                                <div className="text-slate-500 font-Poppins">
-                                  {subItem.link && (
-                                    <a
-                                      href={subItem?.link}
-                                      target="blank"
-                                      className="flex items-center justify-start space-x-1 text-blue-700 cursor-pointer"
-                                    >
-                                      <div className="">Link</div>
-                                      <div className="pb-[1px]">
-                                        <TbExternalLink />
-                                      </div>
-                                    </a>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                ))
+                <>
+                  {isChecked ? (
+                    <PlanDetailsViewTable itineraryData={itineraryData} />
+                  ) : (
+                    <PlanDetailsViewStepper itineraryData={itineraryData} />
+                  )}
+                </>
               ) : (
                 <div className="py-10 flex items-center justify-start pl-1 w-full">
                   {user?._id === planData?.createdBy ? (
@@ -363,6 +352,17 @@ const PlanDetails = () => {
             {itineraryData && itineraryData.note && (
               <div className="font-Poppins text-base font-medium text-slate-500 pt-5">
                 <div>Note: {itineraryData?.note}</div>
+              </div>
+            )}
+            {itineraryData && planData && (
+              <div className="font-Poppins text-sm text-slate-500 pt-5">
+                <div>Created by: {planData?.createdByName}</div>
+                <div>
+                  Created At: {new Date(planData?.createdAt).toLocaleString()}
+                </div>
+                <div>
+                  Updated At: {new Date(planData?.updatedAt).toLocaleString()}
+                </div>
               </div>
             )}
           </div>

@@ -1,0 +1,15 @@
+A. BUG FIXES::
+    1. ADD & DEL Plan buttons were not working in the Day sections of the Edit Itinerary Page.
+    2. The Time input field was not displaying in the Day sections of the Edit Itinerary Page on certain mobile browsers.
+    3. Bookmark status was not showing correctly sometimes after Refreshing the page or Editing Itinerary in the Bookmark button on the Plan Details Page.
+    4x. Plans were still visible on the Plans Page & Bookmarks Page after Logout, only on Server-host, not on Localhost.
+
+B. CHANGES::
+    1. Changed the Plan Types input field from a Text input to a Dropdown (select) option in the Day sections of the Edit Itinerary Page.
+    2. Added Auto Day & Date Increment when Adding a new Day in the Edit Itinerary Page.
+    3. Set the default Time field to 10:00 AM when Adding a new Day or new Plans in the Day sections of the Edit Itinerary Page.
+
+C. NEW FEATURES::
+    1. Redirects users to the Last Used Page after successful login from the Login Page. 
+    2. Added Two Different View Types for the Itinerary, along with a Switch button to Toggle between views on the Plan Details Page.
+    3. Displayed Plan Creator and Timing Details at the bottom of the Plan Details Page.
