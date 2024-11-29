@@ -44,7 +44,7 @@ const CreateEditPlan = () => {
         setAbout(data?.data?.plan.about);
         setAccess(data?.data?.plan.access);
       } else if (error) {
-        console.log(error);
+        // console.log(error);
         toast.error(error?.data?.message || "Failed to fetch plan");
       }
     }
@@ -80,7 +80,7 @@ const CreateEditPlan = () => {
         toast.success(res?.message);
         navigate(`/plans/${res.data.plan._id}`);
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         toast.error(err?.data?.message || "Something went wrong");
       }
     } else {
