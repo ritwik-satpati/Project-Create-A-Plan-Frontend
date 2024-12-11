@@ -207,271 +207,282 @@ const EditItinerary = () => {
           Edit the itinerary of this plan
         </div>
       </div>
-      {
-        (!itinerary[0].day && !itinerary[0].date) || isGetItineraryQueryLoading ? (
-          <div className="h-full w-full flex items-center justify-center">
-            {" "}
-            <Loading />{" "}
-          </div>
-        ) : (
-          <div>
-            <form className="w-full space-y-4" onSubmit={handleUpdateItinerary}>
-              <div className="space-y-2">
-                {itinerary &&
-                  itinerary.map((day, dayIndex) => (
-                    <div
-                      key={dayIndex}
-                      className="space-y-2 bg-slate-200 rounded-sm p-2"
-                    >
-                      <div className="flex items-center justify-between space-x-5">
-                        <div className="flex items-center justify-start space-x-2">
-                          <label
-                            htmlFor="day"
-                            className="font-Poppins block text-xl font-medium leading-6 text-gray-800"
-                          >
-                            Day<span className="text-red-600"> *</span>
-                          </label>
-                          <div className="">
-                            <input
-                              id="day"
-                              name="day"
-                              type="number"
-                              required
-                              value={day.day}
-                              onChange={(e) =>
-                                handleDayInputChange(
-                                  dayIndex,
-                                  "day",
-                                  e.target.value
-                                )
-                              }
-                              className="font-Poppins appearance-none outline-none block w-12 rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-start space-x-2">
-                          <button
-                            className="p-2 aspect-square rounded-sm bg-blue-400 hover:bg-blue-500 text-blue-900"
-                            onClick={(e) => handleAddDay(e, dayIndex)}
-                          >
-                            <MdLibraryAdd />
-                          </button>
-                          {(dayIndex > 0 || itinerary.length > 1) && (
-                            <button
-                              className="p-2 aspect-square rounded-sm bg-red-500 hover:bg-red-600 text-red-900"
-                              onClick={(e) => handleDeleteDay(e, dayIndex)}
-                            >
-                              <MdDelete />
-                            </button>
-                          )}
+      {(!itinerary[0].day && !itinerary[0].date) ||
+      isGetItineraryQueryLoading ? (
+        <div className="h-full w-full flex items-center justify-center">
+          {" "}
+          <Loading />{" "}
+        </div>
+      ) : (
+        <div>
+          <form className="w-full space-y-4" onSubmit={handleUpdateItinerary}>
+            <div className="space-y-2">
+              {itinerary &&
+                itinerary.map((day, dayIndex) => (
+                  <div
+                    key={dayIndex}
+                    className="space-y-2 bg-slate-200 rounded-sm p-2"
+                  >
+                    <div className="flex items-center justify-between space-x-5">
+                      <div className="flex items-center justify-start space-x-2">
+                        <label
+                          htmlFor="day"
+                          className="font-Poppins block text-xl font-medium leading-6 text-gray-800"
+                        >
+                          Day<span className="text-red-600"> *</span>
+                        </label>
+                        <div className="">
+                          <input
+                            id="day"
+                            name="day"
+                            type="number"
+                            required
+                            value={day.day}
+                            onChange={(e) =>
+                              handleDayInputChange(
+                                dayIndex,
+                                "day",
+                                e.target.value
+                              )
+                            }
+                            className="font-Poppins appearance-none outline-none block w-12 rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                          />
                         </div>
                       </div>
 
                       <div className="flex items-center justify-start space-x-2">
-                        <label
-                          htmlFor="date"
-                          className="font-Poppins block font-medium leading-6 text-gray-800"
+                        <button
+                          className="p-2 aspect-square rounded-sm bg-blue-400 hover:bg-blue-500 text-blue-900"
+                          onClick={(e) => handleAddDay(e, dayIndex)}
                         >
-                          Date<span className="text-red-600"> *</span>
-                        </label>
-                        <div className="">
-                          <input
-                            id="date"
-                            name="date"
-                            type="date"
-                            required
-                            value={day.date}
-                            onChange={(e) =>
-                              handleDayInputChange(dayIndex, "date", e.target.value)
-                            }
-                            className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="desc"
-                          className="font-Poppins block font-medium leading-6 text-gray-800"
-                        >
-                          Description
-                        </label>
-                        <div className="">
-                          <textarea
-                            id="desc"
-                            name="desc"
-                            type="desc"
-                            value={day.desc}
-                            onChange={(e) =>
-                              handleDayInputChange(dayIndex, "desc", e.target.value)
-                            }
-                            className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="pt-2">
-                        <div className="font-Poppins block font-medium leading-6 text-gray-800">
-                          Plans<span className="text-red-600"> *</span>
-                        </div>
-                        <div className="overflow-x-auto">
-                          <table className="border-collapse border-2 border-gray-400 min-w-full font-Poppins">
-                            <thead>
-                              <tr>
-                                <th className="border-2 border-gray-400 min-w-12"></th>
-                                <th className="border-2 border-gray-400 min-w-36">
-                                  Type
-                                </th>
-                                <th className="border-2 border-gray-400 min-w-72">
-                                  Plan<span className="text-red-600"> *</span>
-                                </th>
-                                <th className="border-2 border-gray-400 min-w-36">
-                                  Time
-                                </th>
-                                <th className="border-2 border-gray-400 min-w-36">
-                                  Link
-                                </th>
-                                <th className="border-2 border-gray-400 min-w-12"></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {day.plans &&
-                                day.plans.map((plan, planIndex) => (
-                                  <tr key={planIndex} className="">
-                                    {planIndex > 0 || day.plans.length > 1 ? (
-                                      <td
-                                        className="flex items-center justify-center text-center border border-gray-400 bg-red-600 hover:bg-red-800 text-white cursor-pointer"
-                                        onClick={(e) => handleDeletePlan(e, dayIndex, planIndex)}
-                                      >
-                                        DEL
-                                      </td>
-                                    ) : (
-                                      <td></td>
-                                    )}
-                                    <td className="border border-gray-400">
-                                      <select
-                                        type="text"
-                                        value={plan.type}
-                                        onChange={(e) =>
-                                          handlePlanInputChange(
-                                            dayIndex,
-                                            planIndex,
-                                            "type",
-                                            e.target.value
-                                          )
-                                        }
-                                        className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                                      >
-                                        <option value="" disabled>
-                                          Select type
-                                        </option>
-                                        {planTypes &&
-                                          planTypes.map((item, index) => (
-                                            <option key={index} value={item}>
-                                              {item}
-                                            </option>
-                                          ))}
-                                      </select>
-                                    </td>
-                                    <td className="border border-gray-400">
-                                      <input
-                                        type="text"
-                                        value={plan.plan}
-                                        onChange={(e) =>
-                                          handlePlanInputChange(
-                                            dayIndex,
-                                            planIndex,
-                                            "plan",
-                                            e.target.value
-                                          )
-                                        }
-                                        className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                                      />
-                                    </td>
-                                    <td className="border border-gray-400">
-                                      <input
-                                        type="time"
-                                        value={plan.time}
-                                        onChange={(e) =>
-                                          handlePlanInputChange(
-                                            dayIndex,
-                                            planIndex,
-                                            "time",
-                                            e.target.value
-                                          )
-                                        }
-                                        className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                                      />
-                                    </td>
-                                    <td className="border border-gray-400">
-                                      <input
-                                        type="text"
-                                        value={plan.link}
-                                        onChange={(e) =>
-                                          handlePlanInputChange(
-                                            dayIndex,
-                                            planIndex,
-                                            "link",
-                                            e.target.value
-                                          )
-                                        }
-                                        className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                                      />
-                                    </td>
-                                    <td
-                                      className="border border-gray-400 flex items-center justify-center text-center bg-green-500 hover:bg-green-700 text-white cursor-pointer"
-                                      onClick={(e) => handleAddPlan(e, dayIndex, planIndex)}
-                                    >
-                                      Add
-                                    </td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
-                        </div>
+                          <MdLibraryAdd />
+                        </button>
+                        {(dayIndex > 0 || itinerary.length > 1) && (
+                          <button
+                            className="p-2 aspect-square rounded-sm bg-red-500 hover:bg-red-600 text-red-900"
+                            onClick={(e) => handleDeleteDay(e, dayIndex)}
+                          >
+                            <MdDelete />
+                          </button>
+                        )}
                       </div>
                     </div>
-                  ))}
-              </div>
 
-              <div>
-                <label
-                  htmlFor="note"
-                  className="font-Poppins block font-medium leading-6 text-gray-800"
-                >
-                  Note
-                </label>
-                <div className="">
-                  <textarea
-                    id="note"
-                    name="note"
-                    type="note"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-700 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
+                    <div className="flex items-center justify-start space-x-2">
+                      <label
+                        htmlFor="date"
+                        className="font-Poppins block font-medium leading-6 text-gray-800"
+                      >
+                        Date<span className="text-red-600"> *</span>
+                      </label>
+                      <div className="">
+                        <input
+                          id="date"
+                          name="date"
+                          type="date"
+                          required
+                          value={day.date}
+                          onChange={(e) =>
+                            handleDayInputChange(
+                              dayIndex,
+                              "date",
+                              e.target.value
+                            )
+                          }
+                          className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
 
-              <div className="pt-5">
-                {isUpdateItineraryMutationLoading ? (
-                  <div className="font-Poppins flex w-full justify-center rounded-sm bg-indigo-700 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700">
-                    Updating the Itinerary ...
+                    <div>
+                      <label
+                        htmlFor="desc"
+                        className="font-Poppins block font-medium leading-6 text-gray-800"
+                      >
+                        Description
+                      </label>
+                      <div className="">
+                        <textarea
+                          id="desc"
+                          name="desc"
+                          type="desc"
+                          value={day.desc}
+                          onChange={(e) =>
+                            handleDayInputChange(
+                              dayIndex,
+                              "desc",
+                              e.target.value
+                            )
+                          }
+                          className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="pt-2">
+                      <div className="font-Poppins block font-medium leading-6 text-gray-800">
+                        Plans<span className="text-red-600"> *</span>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="border-collapse border-2 border-gray-400 min-w-full font-Poppins">
+                          <thead>
+                            <tr>
+                              <th className="border-2 border-gray-400 min-w-12"></th>
+                              <th className="border-2 border-gray-400 min-w-36">
+                                Type
+                              </th>
+                              <th className="border-2 border-gray-400 min-w-72">
+                                Plan<span className="text-red-600"> *</span>
+                              </th>
+                              <th className="border-2 border-gray-400 min-w-36">
+                                Time
+                              </th>
+                              <th className="border-2 border-gray-400 min-w-36">
+                                Link
+                              </th>
+                              <th className="border-2 border-gray-400 min-w-12"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {day.plans &&
+                              day.plans.map((plan, planIndex) => (
+                                <tr key={planIndex} className="">
+                                  {planIndex > 0 || day.plans.length > 1 ? (
+                                    <td
+                                      className="flex items-center justify-center text-center border border-gray-400 bg-red-600 hover:bg-red-800 text-white cursor-pointer"
+                                      onClick={(e) =>
+                                        handleDeletePlan(e, dayIndex, planIndex)
+                                      }
+                                    >
+                                      DEL
+                                    </td>
+                                  ) : (
+                                    <td></td>
+                                  )}
+                                  <td className="border border-gray-400">
+                                    <select
+                                      type="text"
+                                      value={plan.type}
+                                      onChange={(e) =>
+                                        handlePlanInputChange(
+                                          dayIndex,
+                                          planIndex,
+                                          "type",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                                    >
+                                      <option value="" disabled>
+                                        Select type
+                                      </option>
+                                      {planTypes &&
+                                        planTypes.map((item, index) => (
+                                          <option key={index} value={item}>
+                                            {item}
+                                          </option>
+                                        ))}
+                                    </select>
+                                  </td>
+                                  <td className="border border-gray-400">
+                                    <input
+                                      type="text"
+                                      value={plan.plan}
+                                      onChange={(e) =>
+                                        handlePlanInputChange(
+                                          dayIndex,
+                                          planIndex,
+                                          "plan",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                                    />
+                                  </td>
+                                  <td className="border border-gray-400">
+                                    <input
+                                      type="time"
+                                      value={plan.time}
+                                      onChange={(e) =>
+                                        handlePlanInputChange(
+                                          dayIndex,
+                                          planIndex,
+                                          "time",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                                    />
+                                  </td>
+                                  <td className="border border-gray-400">
+                                    <input
+                                      type="text"
+                                      value={plan.link}
+                                      onChange={(e) =>
+                                        handlePlanInputChange(
+                                          dayIndex,
+                                          planIndex,
+                                          "link",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                                    />
+                                  </td>
+                                  <td
+                                    className="border border-gray-400 flex items-center justify-center text-center bg-green-500 hover:bg-green-700 text-white cursor-pointer"
+                                    onClick={(e) =>
+                                      handleAddPlan(e, dayIndex, planIndex)
+                                    }
+                                  >
+                                    Add
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
-                ) : (
-                  <button
-                    type="submit"
-                    className="font-Poppins flex w-full justify-center rounded-sm bg-indigo-700 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
-                  >
-                    Update the Itinerary
-                  </button>
-                )}
+                ))}
+            </div>
+
+            <div>
+              <label
+                htmlFor="note"
+                className="font-Poppins block font-medium leading-6 text-gray-800"
+              >
+                Note
+              </label>
+              <div className="">
+                <textarea
+                  id="note"
+                  name="note"
+                  type="note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                />
               </div>
-            </form>
-          </div>
-        )
-      }
+            </div>
+
+            <div className="pt-5">
+              {isUpdateItineraryMutationLoading ? (
+                <div className="font-Poppins flex w-full justify-center rounded-sm bg-blue-800 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800">
+                  Updating the Itinerary ...
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="font-Poppins flex w-full justify-center rounded-sm bg-blue-800 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
+                >
+                  Update the Itinerary
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

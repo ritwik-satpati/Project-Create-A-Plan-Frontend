@@ -16,11 +16,22 @@ const authSlice = createSlice({
       state.isLoading = true;
     },
     registerUserSuccess: (state, action) => {
+      state.isLoading = false;
+    },
+    registerUserFail: (state) => {
+      state.isLoading = false;
+    },
+
+    // *** User Activation ***
+    activeUserRequest: (state) => {
+      state.isLoading = true;
+    },
+    activeUserSuccess: (state, action) => {
       state.user = action.payload;
       state.isLoading = false;
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
-    registerUserFail: (state) => {
+    activeUserFail: (state) => {
       state.user = state.user;
       state.isLoading = false;
     },
@@ -73,6 +84,10 @@ export const {
   registerUserRequest,
   registerUserSuccess,
   registerUserFail,
+  // *** User Activation ***
+  activeUserRequest,
+  activeUserSuccess,
+  activeUserFail,
   // *** User Login ***
   loginUserRequest,
   loginUserSuccess,

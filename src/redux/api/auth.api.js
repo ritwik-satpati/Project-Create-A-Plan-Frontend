@@ -1,5 +1,5 @@
 import { apiSlice } from "../slices/api.slice";
-import { AUTH_V1_URL } from "../apiRoutes";
+import { AUTH_V1_URL } from "../../constants/apiRoutes";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,6 +9,31 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: `${AUTH_V1_URL}/login`,
         method: "POST",
         body: data,
+      }),
+      providesTags: ["User"],
+      invalidatesTags: ["Plans", "Plan", "Itinerary", "Bookmarks", "Bookmark"],
+    }),
+    // *** User Register ***
+    register: builder.mutation({
+      query: (data) => ({
+        url: `${AUTH_V1_URL}/register`,
+        method: "POST",
+        body: data,
+      }),
+      // providesTags: ["User"],
+      // invalidatesTags: [
+      //     "Plans",
+      //     "Plan",
+      //     "Itinerary",
+      //     "Bookmarks",
+      //     "Bookmark",
+      // ],
+    }),
+    // *** User Activation ***
+    activation: builder.mutation({
+      query: (activationToken) => ({
+        url: `${AUTH_V1_URL}/active/${activationToken}`,
+        method: "POST",
       }),
       providesTags: ["User"],
       invalidatesTags: ["Plans", "Plan", "Itinerary", "Bookmarks", "Bookmark"],
@@ -35,4 +60,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useLogoutMutation } = authApiSlice;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useActivationMutation,
+  useLogoutMutation,
+} = authApiSlice;
