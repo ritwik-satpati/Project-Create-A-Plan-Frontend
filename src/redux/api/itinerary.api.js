@@ -1,5 +1,5 @@
 import { apiSlice } from "../slices/api.slice";
-import { ITINERARY_V1_URL } from "../apiRoutes";
+import { ITINERARY_V1_URL } from "../../constants/apiRoutes";
 
 export const itineraryApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

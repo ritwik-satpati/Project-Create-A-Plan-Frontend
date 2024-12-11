@@ -83,7 +83,7 @@ const Account = () => {
           <button
             type="submit"
             onClick={handleLogout}
-            className="font-Poppins flex w-full justify-center rounded-sm bg-indigo-700 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-700"
+            className="font-Poppins flex w-full justify-center rounded-sm bg-blue-800 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
           >
             Logout
           </button>

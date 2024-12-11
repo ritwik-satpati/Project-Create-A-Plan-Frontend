@@ -1,12 +1,15 @@
-import React from 'react'
-import BaseLayout from '../layouts/BaseLayout'
+import React from "react";
+import BaseLayout from "../layouts/BaseLayout";
+import MetaData from "../utils/MetaData";
 
 const SharedPage = () => {
   return (
     <>
-    <BaseLayout menu="shared"/>
-    </>
-  )
-}
+      <MetaData page="Shared" keywords="Shared, Plans" />
 
-export default SharedPage
+      <BaseLayout menu="shared" />
+    </>
+  );
+};
+
+export default SharedPage;

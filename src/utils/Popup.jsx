@@ -2,12 +2,12 @@ import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 
 const Popup = ({ children, onClose, onSubmit }) => {
-  const modalRoot = document.getElementById("popup-root");
+  let modalRoot = document.getElementById("popup-root");
+  // Create the root element if it doesn't exist
   if (!modalRoot) {
-    // Create the root element if it doesn't exist
-    const root = document.createElement("div");
-    root.id = "popup-root";
-    document.body.appendChild(root);
+    modalRoot = document.createElement("div");
+    modalRoot.id = "popup-root";
+    document.body.appendChild(modalRoot);
   }
 
   const modalRef = useRef(null);

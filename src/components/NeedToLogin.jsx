@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Dialog from "./Dialog";
 
 const NeedToLogin = ({
   refQuery,
@@ -18,7 +19,8 @@ const NeedToLogin = ({
 
   return (
     <div className="h-full w-full flex items-center justify-center">
-      <div className="bg-gray-50 rounded-md shadow-md shadow-black border-2 border-gray-300 max-w-md w-full p-6">
+      <>
+        {/* <div className="bg-gray-50 rounded-md shadow-md shadow-black border-2 border-gray-300 max-w-md w-full p-6">
         <h2 className="font-Poppins text-xl font-semibold text-gray-800 mb-4">
           {title}
         </h2>
@@ -29,7 +31,22 @@ const NeedToLogin = ({
         >
           Go to Login
         </button>
-      </div>
+      </div> */}
+
+        <Dialog
+          isOpen={true}
+          canClose={false}
+          title={title}
+          message={text}
+          buttonsCount={1}
+          button1Text="Login"
+          button1Colour="blue-600"
+          button1HoverColour="blue-800"
+          button1OnClick={handleLoginRedirect}
+          submitBtn={1}
+          buttonsType="fill"
+        />
+      </>
     </div>
   );
 };

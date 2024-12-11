@@ -34,12 +34,12 @@ import {
 } from "../redux/slices/planDetails.slice";
 import Dialog from "./Dialog";
 import Popup from "../utils/Popup";
-import { FaLockOpen, FaLock, FaUserLock } from "react-icons/fa";
 import NeedToLogin from "./NeedToLogin";
 import { MdFormatAlignLeft } from "react-icons/md";
 import { AiOutlineTable } from "react-icons/ai";
 import PlanDetailsViewTable from "./PlanDetailsViewTable";
 import PlanDetailsViewStepper from "./PlanDetailsViewStepper";
+import MetaData from "../utils/MetaData";
 
 const PlanDetails = () => {
   const { planId } = useParams();
@@ -64,7 +64,8 @@ const PlanDetails = () => {
   } = useGetBookmarkedPlanByPlanIdQuery(planId);
 
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isBookmarkClickedWithoutLogin, setIsBookmarkClickedWithoutLogin] = useState(false);
+  const [isBookmarkClickedWithoutLogin, setIsBookmarkClickedWithoutLogin] =
+    useState(false);
 
   useEffect(() => {
     if (data) {
@@ -99,7 +100,6 @@ const PlanDetails = () => {
         setIsBookmarked(isBookmarked);
         toast.error(err?.data?.message || "Something went wrong");
       }
-
     } else {
       setIsBookmarkClickedWithoutLogin(true);
     }
@@ -152,8 +152,8 @@ const PlanDetails = () => {
       toast.warning("This plan is private. Others cannot view it.");
     }
     try {
-      const fullUrl = window.location.origin + location.pathname;
-      // await window.navigator.clipboard.writeText(fullUrl);
+      // const fullUrl = window.location.origin + location.pathname;
+      const fullUrl = window.location.href;
       const text = `${planData?.name} :: ${fullUrl}`;
       await window.navigator.clipboard.writeText(text);
       toast.success("Link copied to clipboard!");
@@ -193,6 +193,14 @@ const PlanDetails = () => {
 
   return (
     <>
+      {planData && (
+        <MetaData
+          page={planData.name}
+          desc={planData.about}
+          keywords={`Plan, ${planData.name}`}
+        />
+      )}
+
       <div className="relative h-full">
         {planData ? (
           <div className="space-y-0">
@@ -200,10 +208,10 @@ const PlanDetails = () => {
               <div className="font-Poppins text-2xl font-bold text-slate-800">
                 {planData.name}
                 {/* <span>
-                  {planData.access === "Public" && <p><FaLockOpen /> </p>}
-                  {planData.access === "Private" && <p><FaLock /> </p>}
-                  {planData.access === "Resticted" && <p><FaUserLock /> </p>}
-                </span> */}
+                                    {planData.access === "Public" && <p><FaLockOpen /> </p>}
+                                    {planData.access === "Private" && <p><FaLock /> </p>}
+                                    {planData.access === "Resticted" && <p><FaUserLock /> </p>}
+                                </span> */}
               </div>
               {planData && planData.about && (
                 <div className="font-Poppins text-base font-medium text-slate-500">
@@ -217,33 +225,33 @@ const PlanDetails = () => {
               {/* Bookmark */}
               {(planData?.access != "Private" ||
                 user?._id === planData?.createdBy) && (
-                  <div
-                    className="flex items-center justify-start space-x-1 bg-blue-400 hover:bg-blue-500 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-blue-900"
-                    onClick={handleBookmark}
-                  >
-                    {isBookmarked ? (
-                      <>
-                        <div className="">
-                          <IoBookmark />
-                        </div>
-                        <div className="">
-                          {isLoadingBookmarked ? (
-                            <p>Checking</p>
-                          ) : (
-                            <p>Bookmarked</p>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="">
-                          <IoBookmarkOutline />
-                        </div>
-                        {isLoadingBookmarked ? <p>Checking</p> : <p>Bookmark</p>}
-                      </>
-                    )}
-                  </div>
-                )}
+                <div
+                  className="flex items-center justify-start space-x-1 bg-blue-400 hover:bg-blue-500 px-2 py-1 rounded-sm select-none cursor-pointer text-sm font-Poppins text-blue-900"
+                  onClick={handleBookmark}
+                >
+                  {isBookmarked ? (
+                    <>
+                      <div className="">
+                        <IoBookmark />
+                      </div>
+                      <div className="">
+                        {isLoadingBookmarked ? (
+                          <p>Checking</p>
+                        ) : (
+                          <p>Bookmarked</p>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="">
+                        <IoBookmarkOutline />
+                      </div>
+                      {isLoadingBookmarked ? <p>Checking</p> : <p>Bookmark</p>}
+                    </>
+                  )}
+                </div>
+              )}
               {user?._id === planData?.createdBy && (
                 <>
                   {/* Edit */}
@@ -290,8 +298,9 @@ const PlanDetails = () => {
                     />
                     <div className="block h-7 w-14 rounded-sm bg-gray-600"></div>
                     <div
-                      className={`dot absolute left-1 top-1 h-5 w-5 rounded-sm bg-white transition ${isChecked ? "translate-x-7" : ""
-                        }`}
+                      className={`dot absolute left-1 top-1 h-5 w-5 rounded-sm bg-white transition ${
+                        isChecked ? "translate-x-7" : ""
+                      }`}
                     >
                       {isChecked ? (
                         <AiOutlineTable className="rounded-full h-5 w-5 p-0.5 text-gray-900 text-xl" />
@@ -318,7 +327,7 @@ const PlanDetails = () => {
               ) : (
                 <div className="py-10 flex items-center justify-start pl-1 w-full">
                   {user?._id === planData?.createdBy ? (
-                    <div className="bg-gray-50 rounded-md shadow-md  border-2 border-gray-300 max-w-md w-full p-4 space-y-4">
+                    <div className="-ml-1 bg-gray-50 rounded-sm shadow-sm border-2 border-gray-300 max-w-md w-full p-4 space-y-4">
                       <div className="space-y-2">
                         <h2 className="font-Poppins text-xl font-semibold text-gray-800">
                           Load Sample Itinerary
@@ -378,69 +387,55 @@ const PlanDetails = () => {
         {isDeleteClicked && (
           <Dialog
             isOpen={isDeleteClicked}
+            handleClose={() => setIsDeleteClicked(false)}
             title="Delete this Plan"
             message="Are you sure to delete this ?"
-            isColourReverse={true}
-            submitText="Delete"
-            handleSubmit={handleConfirmDelete}
-            closeText="Cancel"
-            handleClose={() => setIsDeleteClicked(false)}
+            buttonsCount={2}
+            button1Text="Cancel"
+            button1Colour="green-500"
+            button1OnClick={() => setIsDeleteClicked(false)}
+            button2Text="Delete"
+            button2Colour="red-600"
+            button2OnClick={handleConfirmDelete}
+            buttonsAlign="right"
+            buttonsGap="8"
+            buttonsWidth="notmax"
           ></Dialog>
         )}
 
         {isEditClicked && (
-          <Popup onClose={() => setIsEditClicked(false)}>
-            <div className="bg-gray-50 rounded-md shadow-md shadow-black border-2 border-gray-300 max-w-md w-full">
-              <div className="flex justify-between items-center px-4 py-2 border-b-2 border-gray-300">
-                <h2 className="font-Poppins text-lg font-semibold text-gray-800">
-                  Edit this Plan
-                </h2>
-                <button
-                  className="text-gray-500 hover:text-gray-800"
-                  onClick={() => setIsEditClicked(false)}
-                >
-                  <IoCloseCircle className="text-2xl" />
-                </button>
-              </div>
-              <div className="p-4">
-                <p className="font-Poppins text-gray-800">
-                  Select what you want to Edit
-                </p>
-                <div className="flex items-center justify-evenly pt-8 space-x-8">
-                  <button
-                    className={`text-yellow-500 border-yellow-500 hover:bg-yellow-500 min-w-[100px] p-1 font-Poppins  hover:text-white border-2 rounded-md`}
-                    onClick={handleEditPlan}
-                  >
-                    Edit Plan
-                  </button>
-                  <button
-                    className={`text-yellow-500 border-yellow-500 hover:bg-yellow-500 min-w-[100px] p-1 font-Poppins  hover:text-white border-2 rounded-md`}
-                    onClick={handleEditItinerary}
-                  >
-                    Edit Itinerary
-                  </button>
-                  <button
-                    className={`text-yellow-500 border-yellow-500 hover:bg-yellow-500 min-w-[100px] p-1 font-Poppins  hover:text-white border-2 rounded-md`}
-                    onClick={handleEditAccess}
-                  >
-                    Edit Access
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Popup>
+          <Dialog
+            isOpen={isEditClicked}
+            canClose={true}
+            handleClose={() => setIsEditClicked(false)}
+            title="Edit this Plan"
+            message="Select what you want to Edit"
+            button1Text="Plan"
+            button1Colour="yellow-500"
+            button1OnClick={handleEditPlan}
+            button2Text="Itinerary"
+            button2Colour="yellow-500"
+            button2OnClick={handleEditItinerary}
+            button3Text="Access"
+            button3Colour="yellow-500"
+            button3OnClick={handleEditAccess}
+            buttonsGap="8"
+          />
         )}
 
         {isBookmarkClickedWithoutLogin && (
           <Dialog
             isOpen={isBookmarkClickedWithoutLogin}
+            handleClose={() => setIsBookmarkClickedWithoutLogin(false)}
             title="Login to Bookmark"
             message="Need to login for bookmarking the plan"
-            isColourReverse={false}
-            submitText="Login"
-            handleSubmit={handleLoginRedirect}
-            closeText="Cancel"
-            handleClose={() => setIsBookmarkClickedWithoutLogin(false)}
+            buttonsCount={1}
+            button1Text="Login"
+            button1Colour="blue-500"
+            button1OnClick={handleLoginRedirect}
+            submitBtn={1}
+            buttonsAlign="full"
+            buttonsWidth="max"
           ></Dialog>
         )}
       </div>

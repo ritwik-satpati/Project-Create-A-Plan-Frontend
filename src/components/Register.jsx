@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../redux/api/auth.api";
+import { useRegisterMutation } from "../redux/api/auth.api";
 import {
-  loginUserFail,
-  loginUserRequest,
-  loginUserSuccess,
+  registerUserFail,
+  registerUserRequest,
+  registerUserSuccess,
 } from "../redux/slices/auth.slice";
 import { toast } from "react-toastify";
 import { supportedMailDomain } from "../constants/supportedMailDomain";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Dialog from "./Dialog";
+import { FaCircleInfo } from "react-icons/fa6";
 
-const Login = () => {
+const Register = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const Login = () => {
   const query = new URLSearchParams(location.search);
   const refQueryValue = query.get("ref");
 
-  const [loginApiCall, { isLoading }] = useLoginMutation();
+  const [registerApiCall, { isLoading }] = useRegisterMutation();
 
   const { user } = useSelector((state) => state.auth);
 
@@ -35,9 +37,18 @@ const Login = () => {
     }
   }, [navigate, user]);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isMailSent, setIsMailSent] = useState(false);
+  const [isShowEmailList, setIsShowEmailList] = useState(false);
+
+  const supportedMailDomainString = supportedMailDomain.join(",\n");
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -46,31 +57,42 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!name || !email || !password) {
       toast.error("Please fill in all the required fields!");
     } else {
-      try {
-        dispatch(loginUserRequest());
-        const res = await loginApiCall({ email, password }).unwrap();
-        toast.success(res?.message);
-        dispatch(loginUserSuccess({ ...res.data.user }));
-        if (refQueryValue) {
-          navigate(`${refQueryValue}`);
-        } else {
-          navigate("/");
+      const domain = email.substring(email.indexOf("@"));
+
+      if (supportedMailDomain.includes(domain)) {
+        try {
+          dispatch(registerUserRequest());
+          const res = await registerApiCall({
+            name,
+            email,
+            password,
+            queryString,
+          }).unwrap();
+          toast.success(res?.message);
+          dispatch(registerUserSuccess());
+          setIsMailSent(true);
+        } catch (err) {
+          dispatch(registerUserFail());
+          console.log(err);
+          toast.error(err?.data?.message || "Something went wrong");
         }
-      } catch (err) {
-        dispatch(loginUserFail());
-        toast.error(err?.data?.message || "Something went wrong");
+      } else {
+        toast.error(
+          "Unsupported Mail Domain. Check Supported Mail Domains List!"
+        );
+        setIsShowEmailList(true);
       }
     }
   };
 
-  const handleRegister = () => {
-    navigate(`/register${queryString}`);
+  const handleLogin = () => {
+    navigate(`/login${queryString}`);
   };
 
   const handleForgotPassword = () => {
@@ -82,19 +104,49 @@ const Login = () => {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="font-Poppins mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-800">
-            Sign in to your account
+            Register as a new user
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleRegister}>
             <div>
               <label
                 htmlFor="email"
                 className="font-Poppins block font-medium leading-6 text-gray-800"
               >
-                Email address
+                Name
                 <span className="text-red-600"> *</span>
+              </label>
+              <div className="mt-1">
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  autoComplete="name"
+                  value={name}
+                  onChange={handleNameChange}
+                  className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="email"
+                className="font-Poppins font-medium leading-6 text-gray-800 flex items-center justify-start space-x-2"
+              >
+                <p>
+                  Email address
+                  <span className="text-red-600"> *</span>
+                </p>
+                <div
+                  className="cursor-pointer text-xs pt-0.5"
+                  onClick={() => setIsShowEmailList(true)}
+                >
+                  <FaCircleInfo />
+                </div>
               </label>
               <div className="mt-1">
                 <input
@@ -119,14 +171,6 @@ const Login = () => {
                   Password
                   <span className="text-red-600"> *</span>
                 </label>
-                <div className="text-sm">
-                  <div
-                    className="font-Poppins font-semibold text-blue-800 hover:text-blue-900 cursor-pointer"
-                    onClick={handleForgotPassword}
-                  >
-                    Forgot password?
-                  </div>
-                </div>
               </div>
               <div className="mt-1 relative">
                 <input
@@ -153,28 +197,56 @@ const Login = () => {
             </div>
 
             <div className="pt-2">
-              <button
-                type="submit"
-                onClick={handleLogin}
-                className="font-Poppins flex w-full justify-center rounded-sm bg-blue-800 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
-              >
-                Sign in
-              </button>
+              {isLoading ? (
+                <button
+                  disabled
+                  className="cursor-default font-Poppins flex w-full justify-center rounded-sm bg-blue-800 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
+                >
+                  Signing up ...
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="cursor-pointer font-Poppins flex w-full justify-center rounded-sm bg-blue-800 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-800"
+                >
+                  Sign up
+                </button>
+              )}
               <div
                 className="pt-2 text-sm font-Poppins font-semibold cursor-pointer"
-                onClick={handleRegister}
+                onClick={handleLogin}
               >
-                Have no account ?{" "}
+                Already have an account ?{" "}
                 <span className="text-blue-800 hover:text-blue-900">
-                  Create Account
+                  Login Now
                 </span>
               </div>
             </div>
           </form>
         </div>
       </div>
+
+      {isShowEmailList && (
+        <Dialog
+          isOpen={isShowEmailList}
+          title="Email Domain can be used"
+          message={supportedMailDomainString}
+          canClose={true}
+          handleClose={() => setIsShowEmailList(false)}
+        />
+      )}
+
+      {isMailSent && (
+        <Dialog
+          isOpen={isMailSent}
+          title="Account Activation Required"
+          message={`An email has been sent to your email address: ${email}. Please check your inbox to activate your account!`}
+          canClose={false}
+          buttonsCount={0}
+        />
+      )}
     </>
   );
 };
 
-export default Login;
+export default Register;

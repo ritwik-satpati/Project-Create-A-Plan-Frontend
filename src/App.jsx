@@ -13,11 +13,15 @@ import EditPlanPage from "./pages/EditPlanPage";
 import EditItineraryPage from "./pages/EditItineraryPage";
 import AboutPage from "./pages/AboutPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import MetaData from "./utils/MetaData";
+import ActivationPage from "./pages/ActivationPage";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <MetaData />
+
         <Routes>
           <Route path="/" element={<Navigate replace to="plans" />} />
 
@@ -26,6 +30,10 @@ function App() {
           <Route path="/bookmarks" element={<BookmarksPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/activation/:activationToken"
+            element={<ActivationPage />}
+          />
           <Route path="/plans/:planId" element={<PlanDetailsPage />} />
           <Route path="/about" element={<AboutPage />} />
 
@@ -39,10 +47,7 @@ function App() {
               element={<EditItineraryPage />}
             />
           </Route>
-
         </Routes>
-
-
 
         <ToastContainer
           position="bottom-center"
