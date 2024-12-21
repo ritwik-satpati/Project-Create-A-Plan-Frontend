@@ -208,10 +208,10 @@ const PlanDetails = () => {
               <div className="font-Poppins text-2xl font-bold text-slate-800">
                 {planData.name}
                 {/* <span>
-                                    {planData.access === "Public" && <p><FaLockOpen /> </p>}
-                                    {planData.access === "Private" && <p><FaLock /> </p>}
-                                    {planData.access === "Resticted" && <p><FaUserLock /> </p>}
-                                </span> */}
+                      {planData.access === "Public" && <p><FaLockOpen /> </p>}
+                      {planData.access === "Private" && <p><FaLock /> </p>}
+                      {planData.access === "Resticted" && <p><FaUserLock /> </p>}
+                </span> */}
               </div>
               {planData && planData.about && (
                 <div className="font-Poppins text-base font-medium text-slate-500">
@@ -345,7 +345,7 @@ const PlanDetails = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="bg-gray-50 rounded-md shadow-md shadow-black border-2 border-gray-300 max-w-md w-full p-4 space-y-2">
+                    <div className="-ml-1 bg-gray-50 rounded-sm shadow-sm border-2 border-gray-300 max-w-md w-full p-4 space-y-2">
                       <h2 className="font-Poppins text-xl font-semibold text-gray-800">
                         Plan is Private
                       </h2>

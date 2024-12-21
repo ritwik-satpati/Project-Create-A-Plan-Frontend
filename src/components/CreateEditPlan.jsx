@@ -74,7 +74,7 @@ const CreateEditPlan = () => {
       toast.error(
         "Both Start Date and End Date are required or leave both blank."
       );
-    } else if (!name && !about && !access) {
+    } else if (!name || !about || !access) {
       toast.error("Please fill all required * field!");
     } else {
       try {
@@ -94,7 +94,7 @@ const CreateEditPlan = () => {
       toast.error(
         "Both Start Date and End Date are required or leave both blank."
       );
-    } else if (!name && !about && !access) {
+    } else if (!name || !about || !access) {
       toast.error("Please fill all required * field!");
     } else {
       try {
@@ -232,7 +232,7 @@ const CreateEditPlan = () => {
                       type="date"
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
-                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                      className="min-h-9.5 font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
@@ -251,7 +251,7 @@ const CreateEditPlan = () => {
                       type="date"
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
-                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                      className="min-h-9.5 font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
