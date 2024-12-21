@@ -8,14 +8,17 @@ import {
   logoutUserSuccess,
 } from "../redux/slices/auth.slice";
 import { toast } from "react-toastify";
+import { BiEdit, BiSolidEdit } from "react-icons/bi";
 
 const Account = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const { account } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.auth);
 
-  const [logoutApiCall] = useLogoutMutation();
+  const [logoutApiCall, { isLoading: isLogoutUserLoading }] =
+    useLogoutMutation();
 
   const handleLogout = async () => {
     try {
@@ -30,6 +33,10 @@ const Account = () => {
     }
   };
 
+  const handleUpcomingFeature = () => {
+    toast.warning("Feature coming soon ...");
+  };
+
   return (
     <>
       <div className="overflow-hidden space-y-5">
@@ -41,40 +48,104 @@ const Account = () => {
             Account information about the user
           </div>
         </div>
-        <div className="border-y border-gray-200 px-4 py-5 sm:p-0 font-Poppins">
-          <dl className="sm:divide-y sm:divide-gray-200">
+        <div className="border-y border-gray-200 p-0 font-Poppins">
+          <dl className="divide-y sm:divide-gray-200">
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Name</dt>
+              <dt className="flex items-center justify-start space-x-2 text-sm font-medium text-gray-500">
+                <p>Name</p>
+                <div
+                  className="cursor-pointer hover:text-gray-800"
+                  onClick={handleUpcomingFeature}
+                >
+                  <BiSolidEdit />
+                </div>
+              </dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                {account?.name}
+              </dd>
+            </div>
+            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">
+                ONE Account Id
+              </dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                {account?._id}
+              </dd>
+            </div>
+            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="flex items-center justify-start space-x-2 text-sm font-medium text-gray-500">
+                <p>Public Name</p>
+                <div
+                  className="cursor-pointer hover:text-gray-800"
+                  onClick={handleUpcomingFeature}
+                >
+                  <BiSolidEdit />
+                </div>
+              </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {user?.name}
               </dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Email address
+              <dt className="text-sm font-medium text-gray-500">User Id</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                {user?._id}
+              </dd>
+            </div>
+            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="flex items-center justify-start space-x-2 text-sm font-medium text-gray-500">
+                <p>Email Address</p>
+                <div
+                  className="cursor-pointer hover:text-gray-800"
+                  onClick={handleUpcomingFeature}
+                >
+                  <BiSolidEdit />
+                </div>
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {user?.email}
+                {account?.email}
               </dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Phone number
+              <dt className="flex items-center justify-start space-x-2 text-sm font-medium text-gray-500">
+                <p>Phone number</p>
+                <div
+                  className="cursor-pointer hover:text-gray-800"
+                  onClick={handleUpcomingFeature}
+                >
+                  <BiSolidEdit />
+                </div>
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {user?.phone || "NA"}
+                {account?.phone || "NA"}
               </dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Gender</dt>
+              <dt className="flex items-center justify-start space-x-2 text-sm font-medium text-gray-500">
+                <p>Gender</p>
+                <div
+                  className="cursor-pointer hover:text-gray-800"
+                  onClick={handleUpcomingFeature}
+                >
+                  <BiSolidEdit />
+                </div>
+              </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {user?.gender || "NA"}
+                {account?.gender || "NA"}
               </dd>
             </div>
-            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Address</dt>
+            <div className="hidden py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="flex items-center justify-start space-x-2 text-sm font-medium text-gray-500">
+                <p>Address</p>
+                <div
+                  className="cursor-pointer hover:text-gray-800"
+                  onClick={handleUpcomingFeature}
+                >
+                  <BiSolidEdit />
+                </div>
+              </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {user?.address || "NA"}
+                {account?.address || "NA"}
               </dd>
             </div>
           </dl>

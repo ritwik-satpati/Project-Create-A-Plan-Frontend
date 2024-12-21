@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  account: localStorage.getItem("account")
+    ? JSON.parse(localStorage.getItem("account"))
+    : null,
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : null,
@@ -27,12 +30,17 @@ const authSlice = createSlice({
       state.isLoading = true;
     },
     activeUserSuccess: (state, action) => {
-      state.user = action.payload;
+      state.account = action.payload.account;
+      state.user = action.payload.user;
       state.isLoading = false;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("account", JSON.stringify(action.payload.account));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     activeUserFail: (state) => {
-      state.user = state.user;
+      localStorage.removeItem("account");
+      localStorage.removeItem("user");
+      state.account = null;
+      state.user = null;
       state.isLoading = false;
     },
 
@@ -41,12 +49,36 @@ const authSlice = createSlice({
       state.isLoading = true;
     },
     loginUserSuccess: (state, action) => {
-      state.user = action.payload;
+      state.account = action.payload.account;
+      state.user = action.payload.user;
       state.isLoading = false;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("account", JSON.stringify(action.payload.account));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     loginUserFail: (state) => {
-      state.user = state.user;
+      localStorage.removeItem("account");
+      localStorage.removeItem("user");
+      state.account = null;
+      state.user = null;
+      state.isLoading = false;
+    },
+
+    // *** User Create ***
+    createUserRequest: (state) => {
+      state.isLoading = true;
+    },
+    createUserSuccess: (state, action) => {
+      state.account = action.payload.account;
+      state.user = action.payload.user;
+      state.isLoading = false;
+      localStorage.setItem("account", JSON.stringify(action.payload.account));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
+    },
+    createUserFail: (state) => {
+      localStorage.removeItem("account");
+      localStorage.removeItem("user");
+      state.account = null;
+      state.user = null;
       state.isLoading = false;
     },
 
@@ -55,12 +87,17 @@ const authSlice = createSlice({
       state.isLoading = true;
     },
     getUserSuccess: (state, action) => {
-      state.user = action.payload;
+      state.account = action.payload.account;
+      state.user = action.payload.user;
       state.isLoading = false;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("account", JSON.stringify(action.payload.account));
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     getUserFail: (state) => {
-      state.user = state.user;
+      localStorage.removeItem("account");
+      localStorage.removeItem("user");
+      state.account = null;
+      state.user = null;
       state.isLoading = false;
     },
 
@@ -69,7 +106,9 @@ const authSlice = createSlice({
       state.isLoading = true;
     },
     logoutUserSuccess: (state) => {
+      localStorage.removeItem("account");
       localStorage.removeItem("user");
+      state.account = null;
       state.user = null;
       state.isLoading = false;
     },
@@ -92,6 +131,10 @@ export const {
   loginUserRequest,
   loginUserSuccess,
   loginUserFail,
+  // *** User Create ***
+  createUserRequest,
+  createUserSuccess,
+  createUserFail,
   // *** User Get ***
   getUserRequest,
   getUserSuccess,

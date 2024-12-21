@@ -19,9 +19,6 @@ export default {
       pattern: /text-(red|blue|green|yellow|purple)/, // For existing text colors
     },
     {
-      pattern: /hover:bg-(red|blue|green|yellow|purple)/, // For background hover states
-    },
-    {
       pattern: /border-(red|blue|green|yellow|purple)/, // For border colors
     },
   ],

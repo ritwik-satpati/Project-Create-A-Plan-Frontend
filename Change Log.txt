@@ -1,13 +1,11 @@
-*** 1.0.2.3 ***
+*** 1.0.3.4 ***
 
 A. BUG FIXES::
-    
+    1. The height of the date fields has been adjusted to ensure they are visible, addressing an issue where they were not displayed in certain browsers (e.g., Safari) in Create Plan & Edit Plan Page.
+    2x. Plans were still visible on the Plans Page & Bookmarks Page after Logout, only on Server-host, not on Localhost.
+
 B. CHANGES::
-    1. Only listed mail domains can be used for Register & Login.
-    2. Popup Dialog is Redesigned.
+    1. Account Page is updated with more details.
 
 C. NEW FEATURES::
-    1. Dynamic Page Title, Description & Head Meta data are added for better SEO and user experience.
-    2. Register & Activation Page are being introduced.
-    3. Show Password On & Off Button is added in the Login Page & Register Page for the password field, allowing users to toggle password visibility.
-    4. Added Additional Details - Start Date, End Date, Category in Create & Edit Plan Page.
+    1. New Account Auth System is introduced. 

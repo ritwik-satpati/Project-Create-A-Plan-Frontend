@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoginMutation } from "../redux/api/auth.api";
+import {
+  useCreateMutation,
+  useLoginMutation,
+  useLogoutMutation,
+} from "../redux/api/auth.api";
 import {
   loginUserFail,
   loginUserRequest,
   loginUserSuccess,
+  logoutUserFail,
+  logoutUserRequest,
+  logoutUserSuccess,
 } from "../redux/slices/auth.slice";
 import { toast } from "react-toastify";
-import { supportedMailDomain } from "../constants/supportedMailDomain";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Dialog from "./Dialog";
 
 const Login = () => {
   const location = useLocation();
@@ -21,7 +28,11 @@ const Login = () => {
   const query = new URLSearchParams(location.search);
   const refQueryValue = query.get("ref");
 
-  const [loginApiCall, { isLoading }] = useLoginMutation();
+  const [loginApiCall, { isLoading: isLoginUserLoading }] = useLoginMutation();
+  const [logoutApiCall, { isLoading: isLogoutUserLoading }] =
+    useLogoutMutation();
+  const [createApiCall, { isLoading: isCreateUserLoading }] =
+    useCreateMutation();
 
   const { user } = useSelector((state) => state.auth);
 
@@ -38,6 +49,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isCreateAccountPopup, setIsCreateAccountPopup] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -54,18 +66,58 @@ const Login = () => {
     } else {
       try {
         dispatch(loginUserRequest());
+
         const res = await loginApiCall({ email, password }).unwrap();
-        toast.success(res?.message);
-        dispatch(loginUserSuccess({ ...res.data.user }));
-        if (refQueryValue) {
-          navigate(`${refQueryValue}`);
+        if (res?.statusCode === 300) {
+          toast.warning(res?.message);
+          setIsCreateAccountPopup(true);
         } else {
-          navigate("/");
+          toast.success(res?.message);
+          dispatch(loginUserSuccess({ ...res.data }));
+          if (refQueryValue) {
+            navigate(`${refQueryValue}`);
+          } else {
+            navigate("/");
+          }
         }
       } catch (err) {
         dispatch(loginUserFail());
         toast.error(err?.data?.message || "Something went wrong");
       }
+    }
+  };
+
+  const handleCancelCreateAccount = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(logoutUserRequest());
+      const res = await logoutApiCall().unwrap({});
+      toast.success(res?.message);
+      dispatch(logoutUserSuccess());
+      navigate("/login");
+    } catch (err) {
+      dispatch(logoutUserFail());
+      toast.error(err?.data?.message || "Something went wrong");
+    }
+    setIsCreateAccountPopup(false);
+  };
+
+  const handleCreateAccount = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(loginUserRequest());
+      const res = await createApiCall().unwrap();
+      toast.success(res?.message);
+      dispatch(loginUserSuccess({ ...res.data }));
+      setIsCreateAccountPopup(false);
+      if (refQueryValue) {
+        navigate(`${refQueryValue}`);
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      dispatch(loginUserFail());
+      toast.error(err?.data?.message || "Something went wrong");
     }
   };
 
@@ -173,6 +225,25 @@ const Login = () => {
           </form>
         </div>
       </div>
+      {isCreateAccountPopup && (
+        <Dialog
+          isOpen={isCreateAccountPopup}
+          canClose={false}
+          handleClose={handleCancelCreateAccount}
+          title="Create User Account"
+          message="You allready have an ONE Account, Want to create User Account linked with it?"
+          buttonsCount={2}
+          button1Text="Create"
+          button1Colour="blue-500"
+          button1OnClick={handleCreateAccount}
+          submitBtn={1}
+          button2Text="Cancel / Logout"
+          button2Colour="red-600"
+          button2OnClick={handleCancelCreateAccount}
+          buttonsAlign="full"
+          buttonsWidth="max"
+        ></Dialog>
+      )}
     </>
   );
 };

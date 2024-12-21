@@ -41,7 +41,7 @@ const Activation = () => {
         dispatch(activeUserRequest());
         const res = await activationApiCall(activationToken).unwrap();
         toast.success(res?.message);
-        dispatch(activeUserSuccess({ ...res.data.user }));
+        dispatch(activeUserSuccess({ ...res.data }));
       } catch (err) {
         setIsError(true);
         toast.error(
