@@ -1,7 +1,7 @@
 {
   "name": "create-a-plan",
   "private": true,
-  "version": "1.0.0.1",
+  "version": "1.0.4.5",
   "description": "A JavaScript based project for Creating Plans & Itinerary for trips.",
   "type": "module",
   "scripts": {

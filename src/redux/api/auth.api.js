@@ -21,9 +21,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
     // *** User Activation ***
     activation: builder.mutation({
-      query: (activationToken) => ({
+      query: ({ activationToken, queryString }) => ({
         url: `${AUTH_V1_URL}/active/${activationToken}`,
         method: "POST",
+        body: { queryString },
       }),
       providesTags: ["User"],
       invalidatesTags: ["Plans", "Plan", "Itinerary", "Bookmarks", "Bookmark"],
@@ -66,6 +67,32 @@ export const authApiSlice = apiSlice.injectEndpoints({
         "Bookmark",
       ],
     }),
+    // *** Forget Pasword ***
+    forgetPassowrd: builder.mutation({
+      query: (data) => ({
+        url: `${AUTH_V1_URL}/forget-password`,
+        method: "POST",
+        body: data,
+      }),
+      // providesTags: ["User"],
+      // invalidatesTags: ["Plans", "Plan", "Itinerary", "Bookmarks", "Bookmark"],
+    }),
+    // *** Reset Password ***
+    resetPassowrd: builder.mutation({
+      query: ({
+        uidQueryValue,
+        tokenQueryValue,
+        newPassword,
+        queryString,
+      }) => ({
+        url: `${AUTH_V1_URL}/reset-password/${uidQueryValue}/${tokenQueryValue}`,
+        method: "POST",
+        body: { newPassword, queryString },
+        headers: { "Content-Type": "application/json" },
+      }),
+      // providsesTags: ["User"],
+      // invalidatesTags: ["Plans", "Plan", "Itinerary", "Bookmarks", "Bookmark"],
+    }),
   }),
 });
 
@@ -75,4 +102,6 @@ export const {
   useLoginMutation,
   useCreateMutation,
   useLogoutMutation,
+  useForgetPassowrdMutation,
+  useResetPassowrdMutation,
 } = authApiSlice;

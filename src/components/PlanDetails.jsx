@@ -67,6 +67,17 @@ const PlanDetails = () => {
   const [isBookmarkClickedWithoutLogin, setIsBookmarkClickedWithoutLogin] =
     useState(false);
 
+  const [viewType, setViewType] = useState("stepper");
+
+  useEffect(() => {
+    // Read the "view" query parameter from the URL on mount
+    const query = new URLSearchParams(window.location.search);
+    const viewQueryValue = query.get("view");
+    if (viewQueryValue) {
+      setViewType(viewQueryValue);
+    }
+  }, []);
+
   useEffect(() => {
     if (data) {
       dispatch(getItineraryRequest());
@@ -176,10 +187,14 @@ const PlanDetails = () => {
     }
   };
 
-  const [isChecked, setIsChecked] = useState(false);
+  const handleChangeViewType = () => {
+    const newViewType = viewType === "table" ? "stepper" : "table";
+    setViewType(newViewType);
 
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
+    // Update the "view" query parameter in the URL
+    const query = new URLSearchParams(window.location.search);
+    query.set("view", newViewType);
+    window.history.pushState({}, "", `?${query.toString()}`);
   };
 
   if (isLoading) {
@@ -292,17 +307,17 @@ const PlanDetails = () => {
                   <div className="relative">
                     <input
                       type="checkbox"
-                      checked={isChecked}
-                      onChange={handleCheckboxChange}
+                      checked={viewType === "table"}
+                      onChange={handleChangeViewType}
                       className="sr-only"
                     />
                     <div className="block h-7 w-14 rounded-sm bg-gray-600"></div>
                     <div
                       className={`dot absolute left-1 top-1 h-5 w-5 rounded-sm bg-white transition ${
-                        isChecked ? "translate-x-7" : ""
+                        viewType === "table" ? "translate-x-7" : ""
                       }`}
                     >
-                      {isChecked ? (
+                      {viewType === "table" ? (
                         <AiOutlineTable className="rounded-full h-5 w-5 p-0.5 text-gray-900 text-xl" />
                       ) : (
                         <MdFormatAlignLeft className="rounded-full h-5 w-5 p-0.5 text-gray-900 text-xl" />
@@ -318,7 +333,7 @@ const PlanDetails = () => {
             <div className="overflow-hidden pt-3 space-y-3">
               {itineraryData ? (
                 <>
-                  {isChecked ? (
+                  {viewType === "table" ? (
                     <PlanDetailsViewTable itineraryData={itineraryData} />
                   ) : (
                     <PlanDetailsViewStepper itineraryData={itineraryData} />

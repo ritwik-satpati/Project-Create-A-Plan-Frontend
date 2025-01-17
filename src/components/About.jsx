@@ -20,6 +20,12 @@ const About = () => {
               </dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Version</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                1.0.4.5
+              </dd>
+            </div>
+            <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
                 Design & Developed by
               </dt>
@@ -84,6 +90,12 @@ const About = () => {
               </dd>
             </div>
           </dl>
+        </div>
+        <div className="pt-2 text-sm font-Poppins font-semibold">
+          Are you a developer ?{" "}
+          <span className="text-blue-800 hover:text-blue-900">
+            Contribute your skills to this project on GitHub
+          </span>
         </div>
       </div>
     </>

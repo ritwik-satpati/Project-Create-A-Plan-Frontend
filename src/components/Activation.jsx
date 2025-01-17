@@ -39,8 +39,11 @@ const Activation = () => {
     const activateUser = async () => {
       try {
         dispatch(activeUserRequest());
-        const res = await activationApiCall(activationToken).unwrap();
-        toast.success(res?.message);
+        const res = await activationApiCall({
+          activationToken,
+          queryString,
+        }).unwrap();
+        toast.success(res?.message || "Activation successful!");
         dispatch(activeUserSuccess({ ...res.data }));
       } catch (err) {
         setIsError(true);
@@ -50,9 +53,29 @@ const Activation = () => {
         dispatch(activeUserFail());
       }
     };
+    if (activationToken && queryString) {
+      activateUser();
+    }
+  }, [activationApiCall, activationToken, queryString, dispatch]);
 
-    activateUser();
-  }, [activationApiCall, activationToken, dispatch]);
+  // useEffect(() => {
+  //   const activateUser = async () => {
+  //     try {
+  //       dispatch(activeUserRequest());
+  //       const res = await activationApiCall({activationToken, queryString}).unwrap();
+  //       toast.success(res?.message);
+  //       dispatch(activeUserSuccess({ ...res.data }));
+  //     } catch (err) {
+  //       setIsError(true);
+  //       toast.error(
+  //         err?.data?.message || "Activation failed. Please try again."
+  //       );
+  //       dispatch(activeUserFail());
+  //     }
+  //   };
+
+  //   activateUser();
+  // }, [activationApiCall, activationToken, dispatch]);
 
   const handleLogin = () => {
     if (queryString === null) {
