@@ -1,11 +1,16 @@
-*** 1.0.3.4 ***
+*** 1.0.4.5 ***
 
-A. BUG FIXES::
-    1. The height of the date fields has been adjusted to ensure they are visible, addressing an issue where they were not displayed in certain browsers (e.g., Safari) in Create Plan & Edit Plan Page.
-    2x. Plans were still visible on the Plans Page & Bookmarks Page after Logout, only on Server-host, not on Localhost.
+A. BUG FIXES::    
+    1.
 
 B. CHANGES::
-    1. Account Page is updated with more details.
+    1. Activation Link now includes all query parameters during registration and redirects to the reference page.
+    2. About Page has been updated.
+    3. Updated README.md.
 
 C. NEW FEATURES::
-    1. New Account Auth System is introduced. 
+    1. Forget Password Page has been introduced.
+    2. Email Query Parameter is now supported when switching between the Login Page and Register Page.
+    3. View Query Parameter has been added to the Plan Details Page to ensure a specific view remains active during sharing or reloading.
+    4. About Page Link has been added to the Login Page and Register Page.
+    5. Added SETUP.md, CONTRIBUTING.md & CONTRIBUTORS.md.

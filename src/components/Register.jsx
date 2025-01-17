@@ -22,10 +22,18 @@ const Register = () => {
 
   const query = new URLSearchParams(location.search);
   const refQueryValue = query.get("ref");
+  const emailQueryValue = query.get("email");
 
   const [registerApiCall, { isLoading }] = useRegisterMutation();
 
   const { user } = useSelector((state) => state.auth);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState(emailQueryValue || "");
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isMailSent, setIsMailSent] = useState(false);
+  const [isShowEmailList, setIsShowEmailList] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -37,13 +45,6 @@ const Register = () => {
     }
   }, [navigate, user]);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isMailSent, setIsMailSent] = useState(false);
-  const [isShowEmailList, setIsShowEmailList] = useState(false);
-
   const supportedMailDomainString = supportedMailDomain.join(",\n");
 
   const handleNameChange = (e) => {
@@ -51,8 +52,15 @@ const Register = () => {
   };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+
+    // Update the "email" query parameter in the URL
+    const query = new URLSearchParams(window.location.search);
+    query.set("email", newEmail); // Use the new email value
+    window.history.pushState({}, "", `?${query.toString()}`);
   };
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -61,7 +69,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!name || !email || !password) {
-      toast.error("Please fill in all the required fields!");
+      toast.error("Please fill in all * the required fields!");
     } else {
       const domain = email.substring(email.indexOf("@"));
 
@@ -79,7 +87,6 @@ const Register = () => {
           setIsMailSent(true);
         } catch (err) {
           dispatch(registerUserFail());
-          console.log(err);
           toast.error(err?.data?.message || "Something went wrong");
         }
       } else {
@@ -95,8 +102,8 @@ const Register = () => {
     navigate(`/login${queryString}`);
   };
 
-  const handleForgotPassword = () => {
-    toast.warn("Feature coming soon ...");
+  const handleAbout = () => {
+    navigate(`/about${queryString}`);
   };
 
   return (
@@ -213,12 +220,21 @@ const Register = () => {
                 </button>
               )}
               <div
-                className="pt-2 text-sm font-Poppins font-semibold cursor-pointer"
+                className="pt-3 text-sm font-Poppins font-semibold cursor-pointer"
                 onClick={handleLogin}
               >
                 Already have an account ?{" "}
                 <span className="text-blue-800 hover:text-blue-900">
                   Login Now
+                </span>
+              </div>
+              <div
+                className="pt-2 text-sm font-Poppins font-semibold cursor-pointer"
+                onClick={handleAbout}
+              >
+                Are you a developer ?{" "}
+                <span className="text-blue-800 hover:text-blue-900">
+                  Contribute your skills
                 </span>
               </div>
             </div>

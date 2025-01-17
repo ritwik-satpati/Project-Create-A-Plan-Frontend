@@ -15,6 +15,7 @@ import AboutPage from "./pages/AboutPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import MetaData from "./utils/MetaData";
 import ActivationPage from "./pages/ActivationPage";
+import ForgetPasswordPage from "./pages/ForgetPasswordPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/bookmarks" element={<BookmarksPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forget-password" element={<ForgetPasswordPage />} />
           <Route
             path="/activation/:activationToken"
             element={<ActivationPage />}

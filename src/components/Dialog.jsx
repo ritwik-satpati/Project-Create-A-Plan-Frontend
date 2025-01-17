@@ -61,7 +61,9 @@ const Dialog = ({
           )}
         </div>
         <div className="p-4">
-          <p className="font-Poppins text-gray-800">{message}</p>
+          <p className="text-sm sm:text-base font-Poppins text-gray-800 overflow-hidden">
+            {message}
+          </p>
           {buttonsCount > 0 && (
             <div
               className={`flex items-center ${
