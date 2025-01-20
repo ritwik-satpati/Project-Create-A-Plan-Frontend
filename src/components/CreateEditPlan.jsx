@@ -28,6 +28,7 @@ const CreateEditPlan = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [category, setCategory] = useState([]);
+  const [status, setStatus] = useState("");
 
   const [pageType, setPageType] = useState("create");
 
@@ -48,6 +49,7 @@ const CreateEditPlan = () => {
         setStartDate(data?.data?.plan?.startDate || "");
         setEndDate(data?.data?.plan?.endDate || "");
         setCategory(data?.data?.plan?.category || []);
+        setStatus(data?.data?.plan?.status || "");
       } else if (error) {
         // console.log(error);
         toast.error(error?.data?.message || "Failed to fetch plan");
@@ -55,7 +57,15 @@ const CreateEditPlan = () => {
     }
   }, [planId, data, error, dispatch]);
 
-  const filledPlanData = { name, about, access, startDate, endDate, category };
+  const filledPlanData = {
+    name,
+    about,
+    access,
+    startDate,
+    endDate,
+    category,
+    status,
+  };
 
   const handleChangeCategory = (e, option) => {
     e.preventDefault();
@@ -185,29 +195,61 @@ const CreateEditPlan = () => {
                 </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="access"
-                  className="font-Poppins block font-medium leading-6 text-gray-800"
+              <div className="block sm:flex space-y-2 sm:space-x-2 sm:space-y-0 w-full">
+                <div
+                  className={`w-full ${
+                    status === "Ongoing" || status === "Completed"
+                      ? `sm:w-1/2`
+                      : `sm:w-full`
+                  }`}
                 >
-                  Access Type<span className="text-red-600"> *</span>
-                </label>
-                <div className="">
-                  <select
-                    id="access"
-                    name="access"
-                    required
-                    value={access}
-                    onChange={(e) => setAccess(e.target.value)}
-                    className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                  <label
+                    htmlFor="access"
+                    className="font-Poppins block font-medium leading-6 text-gray-800"
                   >
-                    <option value="Public">Public</option>
-                    <option value="Private">Private</option>
-                    <option value="Restricted" disabled>
-                      Restricted
-                    </option>
-                  </select>
+                    Access Type<span className="text-red-600"> *</span>
+                  </label>
+                  <div className="">
+                    <select
+                      id="access"
+                      name="access"
+                      required
+                      value={access}
+                      onChange={(e) => setAccess(e.target.value)}
+                      className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                    >
+                      <option value="Public">Public</option>
+                      <option value="Private">Private</option>
+                      <option value="Restricted" disabled>
+                        Restricted
+                      </option>
+                    </select>
+                  </div>
                 </div>
+
+                {(status === "Ongoing" || status === "Completed") && (
+                  <div className="w-full sm:w-1/2">
+                    <label
+                      htmlFor="status"
+                      className="font-Poppins block font-medium leading-6 text-gray-800"
+                    >
+                      Status<span className="text-red-600"> *</span>
+                    </label>
+                    <div className="">
+                      <select
+                        id="status"
+                        name="status"
+                        required
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="font-Poppins appearance-none outline-none block w-full rounded-sm border-0 px-1.5 py-1.5 text-gray-800 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+                      >
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

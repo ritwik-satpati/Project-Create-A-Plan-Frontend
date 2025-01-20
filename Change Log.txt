@@ -1,16 +1,14 @@
-*** 1.0.4.5 ***
+*** 1.0.5.6 ***
 
 A. BUG FIXES::    
     1.
 
 B. CHANGES::
-    1. Activation Link now includes all query parameters during registration and redirects to the reference page.
-    2. About Page has been updated.
-    3. Updated README.md.
+    1. Added some more items in Plan types & Plan Categories in Constants.
+    2. Updated CONTRIBUTING.md.
+    3. Updated Note field in PlanDetails Page. Now It supports multi-lines and clickable links.
 
 C. NEW FEATURES::
-    1. Forget Password Page has been introduced.
-    2. Email Query Parameter is now supported when switching between the Login Page and Register Page.
-    3. View Query Parameter has been added to the Plan Details Page to ensure a specific view remains active during sharing or reloading.
-    4. About Page Link has been added to the Login Page and Register Page.
-    5. Added SETUP.md, CONTRIBUTING.md & CONTRIBUTORS.md.
+    1. Added Plan Status field in CreateEditPlan Page.
+    2. Added new red line at the end of PlanDetails Page about Status.
+    

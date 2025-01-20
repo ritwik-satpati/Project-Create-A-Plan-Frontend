@@ -374,20 +374,47 @@ const PlanDetails = () => {
               )}
             </div>
             {itineraryData && itineraryData.note && (
-              <div className="font-Poppins text-base font-medium text-slate-500 pt-5">
-                <div>Note: {itineraryData?.note}</div>
+              <div className="font-Poppins text-sm font-medium text-slate-500 pt-5">
+                <div className="text-base">Note:</div>
+                <div className="text-sm">
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: itineraryData?.note
+                        .replace(
+                          /(https?:\/\/[^\s]+)/g,
+                          '<a  href="$1" target="_blank" rel="noopener noreferrer" class="underline text-blue-600">$1</a>'
+                        )
+                        .replace(/\n/g, "<br />"), // Ensure line breaks are handled
+                    }}
+                  />
+                </div>
               </div>
             )}
             {itineraryData && planData && (
-              <div className="font-Poppins text-sm text-slate-500 pt-5">
-                <div>Created by: {planData?.createdByName}</div>
-                <div>
-                  Created At: {new Date(planData?.createdAt).toLocaleString()}
+              <>
+                <div className="font-Poppins text-sm text-slate-500 pt-5">
+                  <div>Created by: {planData?.createdByName}</div>
+                  <div>
+                    Created At: {new Date(planData?.createdAt).toLocaleString()}
+                  </div>
+                  <div>
+                    Updated At: {new Date(planData?.updatedAt).toLocaleString()}
+                  </div>
                 </div>
-                <div>
-                  Updated At: {new Date(planData?.updatedAt).toLocaleString()}
-                </div>
-              </div>
+                {planData?.status != "Completed" && (
+                  <div className="font-Poppins text-sm text-red-500 pt-5">
+                    {planData.status === "Ongoing" && (
+                      <p>
+                        If you have Completed this Plan, please update the
+                        Status to 'Completed' in Edit Plan...
+                      </p>
+                    )}
+                    {planData.status === "Updated" && (
+                      <p>Kindly Update the Itinerary in Edit Itinerary...</p>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         ) : (
